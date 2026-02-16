@@ -146,18 +146,23 @@ function BillDetail({ billNumber, onClose }) {
         </div>
       )}
 
-      {/* Keywords */}
+      {/* Keywords — capped at 8 */}
       {detail.keywords.length > 0 && (
         <div style={{ marginBottom: "12px" }}>
           <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "6px" }}>
-            Keywords
+            Keywords ({detail.keywords.length})
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-            {detail.keywords.map((kw, i) => (
+            {detail.keywords.slice(0, 8).map((kw, i) => (
               <span key={i} style={{ fontSize: "10px", color: "#64748b", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "3px", padding: "2px 8px" }}>
                 {kw}
               </span>
             ))}
+            {detail.keywords.length > 8 && (
+              <span style={{ fontSize: "10px", color: "#475569", padding: "2px 8px" }}>
+                +{detail.keywords.length - 8} more
+              </span>
+            )}
           </div>
         </div>
       )}
