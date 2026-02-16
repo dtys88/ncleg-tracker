@@ -4,52 +4,45 @@ import { useState } from "react";
 
 export default function CommitteeCard({ committee }) {
   const [hovered, setHovered] = useState(false);
-  const chamberColors = { H: "#60a5fa", S: "#c084fc", N: "#fbbf24" };
-  const chamberNames = { H: "House", S: "Senate", N: "Joint" };
-  const code = committee.sChamberCode;
+  const c = committee;
+  const chamberLabel = c.sChamberCode === "H" ? "House" : c.sChamberCode === "S" ? "Senate" : "Joint";
+  const chamberColor = c.sChamberCode === "H" ? "var(--accent-blue)" : c.sChamberCode === "S" ? "var(--accent-purple)" : "var(--text-muted)";
+  const chamberBg = c.sChamberCode === "H" ? "var(--accent-blue-light)" : c.sChamberCode === "S" ? "var(--accent-purple-light)" : "var(--bg-elevated)";
 
   return (
-    <a
-      href={`https://www.ncleg.gov/Committees/CommitteeInfo/${
-        code === "N" ? "NonStanding" : code === "H" ? "House" : "Senate"
-      }/${committee.nCommitteeID}`}
-      target="_blank"
-      rel="noopener noreferrer"
+    <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        background: hovered ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.06)",
-        borderRadius: "8px",
-        padding: "12px 16px",
+        background: hovered ? "var(--bg-card-hover)" : "var(--bg-card)",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: "var(--radius-md)",
+        padding: "14px 16px",
         transition: "all 0.2s ease",
-        textDecoration: "none",
-        color: "inherit",
+        boxShadow: hovered ? "var(--shadow-md)" : "var(--shadow-sm)",
       }}
     >
-      <div
-        style={{
-          width: "6px",
-          height: "6px",
-          borderRadius: "50%",
-          background: chamberColors[code] || "#94a3b8",
-          flexShrink: 0,
-        }}
-      />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "13px", color: "#cbd5e1", fontWeight: 500 }}>
-          {committee.sCommitteeName}
-        </div>
-        <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>
-          {chamberNames[code] || "Other"}
-          {committee.bNonStandingCommittee ? " · Non-Standing" : " · Standing"}
-          {committee.bSelectCommittee ? " · Select" : ""}
-        </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            padding: "2px 8px",
+            borderRadius: "4px",
+            fontSize: "10px",
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            fontFamily: "var(--font-mono)",
+            background: chamberBg,
+            color: chamberColor,
+          }}
+        >
+          {chamberLabel.toUpperCase()}
+        </span>
       </div>
-      <div style={{ fontSize: "14px", opacity: hovered ? 0.5 : 0.2, transition: "opacity 0.2s" }}>→</div>
-    </a>
+      <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.4 }}>
+        {c.sCommitteeName}
+      </div>
+    </div>
   );
 }

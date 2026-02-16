@@ -4,32 +4,27 @@ export default function StatCard({ label, value, accent, icon }) {
   return (
     <div
       style={{
-        background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.06)",
-        borderRadius: "10px",
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
+        background: "var(--bg-card)",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: "var(--radius-md)",
+        padding: "16px 18px",
+        boxShadow: "var(--shadow-sm)",
+        transition: "box-shadow 0.2s ease",
       }}
     >
-      <div
-        style={{
-          fontSize: "11px",
-          color: "#64748b",
-          fontWeight: 600,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-        }}
-      >
-        {icon} {label}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
+        <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          {label}
+        </span>
+        <span style={{ fontSize: "16px" }}>{icon}</span>
       </div>
       <div
         style={{
-          fontSize: "32px",
-          fontWeight: 800,
-          color: accent || "#e2e8f0",
+          fontSize: "28px",
+          fontWeight: 700,
+          color: accent || "var(--text-primary)",
           fontFamily: "var(--font-mono)",
+          letterSpacing: "-0.02em",
           lineHeight: 1,
         }}
       >

@@ -23,78 +23,40 @@ function generatePDFHTML(bills, watchedIds, title) {
     .map(
       (b) => `
       <tr>
-        <td style="padding:6px 10px;border-bottom:1px solid #e2e8f0;font-family:monospace;font-size:12px;font-weight:700;white-space:nowrap;">
-          ${b.billNumber}
-          ${watchedIds.has(b.id) ? '<span style="color:#d97706;"> ★</span>' : ""}
+        <td style="padding:8px 12px;border-bottom:1px solid #eef0f4;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;white-space:nowrap;color:#1e293b;">
+          ${b.billNumber}${watchedIds.has(b.id) ? '<span style="color:#d97706;"> ★</span>' : ""}
         </td>
-        <td style="padding:6px 10px;border-bottom:1px solid #e2e8f0;font-size:12px;">
+        <td style="padding:8px 12px;border-bottom:1px solid #eef0f4;font-size:13px;color:#374151;">
           ${b.title}
-          ${b.isHealth ? '<span style="display:inline-block;background:#dcfce7;color:#166534;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;margin-left:6px;">HEALTH</span>' : ""}
+          ${b.isHealth ? '<span style="display:inline-block;background:#d1fae5;color:#059669;padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-left:6px;">HEALTH</span>' : ""}
         </td>
-        <td style="padding:6px 10px;border-bottom:1px solid #e2e8f0;font-size:11px;color:#64748b;text-align:center;">${b.chamber}</td>
-        <td style="padding:6px 10px;border-bottom:1px solid #e2e8f0;font-size:11px;color:#475569;">${b.description}</td>
-        <td style="padding:6px 10px;border-bottom:1px solid #e2e8f0;font-size:11px;color:#64748b;white-space:nowrap;">${formatDate(b.pubDate)}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #eef0f4;font-size:12px;color:#6b7280;text-align:center;">${b.chamber}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #eef0f4;font-size:12px;color:#6b7280;">${b.description}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #eef0f4;font-size:12px;color:#6b7280;white-space:nowrap;">${formatDate(b.pubDate)}</td>
       </tr>`
     )
     .join("");
 
   const healthCount = bills.filter((b) => b.isHealth).length;
   const watchedCount = bills.filter((b) => watchedIds.has(b.id)).length;
-  const now = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const now = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
-  return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>${title}</title>
-  <style>
-    @media print {
-      body { margin: 0.5in; }
-      .no-print { display: none; }
-      table { page-break-inside: auto; }
-      tr { page-break-inside: avoid; }
-    }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1e293b; margin: 40px; }
-  </style>
-</head>
-<body>
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;border-bottom:3px solid #16a34a;padding-bottom:16px;">
-    <div>
-      <h1 style="margin:0;font-size:22px;color:#0f172a;">NC Leg Tracker</h1>
-      <p style="margin:4px 0 0;font-size:13px;color:#64748b;">${title}</p>
-    </div>
-    <div style="text-align:right;">
-      <div style="font-size:12px;color:#64748b;">${now}</div>
-      <div style="font-size:12px;color:#94a3b8;margin-top:2px;">
-        ${bills.length} bills · ${healthCount} health-related · ${watchedCount} watched
-      </div>
-    </div>
-  </div>
-  <table style="width:100%;border-collapse:collapse;">
-    <thead>
-      <tr style="background:#f8fafc;">
-        <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;color:#475569;border-bottom:2px solid #cbd5e1;text-transform:uppercase;letter-spacing:0.05em;">Bill</th>
-        <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;color:#475569;border-bottom:2px solid #cbd5e1;text-transform:uppercase;letter-spacing:0.05em;">Title</th>
-        <th style="padding:8px 10px;text-align:center;font-size:11px;font-weight:700;color:#475569;border-bottom:2px solid #cbd5e1;text-transform:uppercase;letter-spacing:0.05em;">Chamber</th>
-        <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;color:#475569;border-bottom:2px solid #cbd5e1;text-transform:uppercase;letter-spacing:0.05em;">Last Action</th>
-        <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;color:#475569;border-bottom:2px solid #cbd5e1;text-transform:uppercase;letter-spacing:0.05em;">Date</th>
-      </tr>
-    </thead>
-    <tbody>${rows}</tbody>
-  </table>
-  <div style="margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;">
-    Generated from NC Leg Tracker · Data from ncleg.gov · North Carolina General Assembly
-  </div>
-  <button class="no-print" onclick="window.print()" style="position:fixed;bottom:20px;right:20px;background:#16a34a;color:white;border:none;border-radius:8px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-    🖨 Print / Save as PDF
-  </button>
-</body>
-</html>`;
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title}</title>
+<style>@media print { body { margin: 0.5in; } .no-print { display: none; } table { page-break-inside: auto; } tr { page-break-inside: avoid; } }
+body { font-family: 'DM Sans', -apple-system, sans-serif; color: #1e293b; margin: 40px; }</style></head><body>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;border-bottom:2px solid #059669;padding-bottom:16px;">
+<div><h1 style="margin:0;font-size:20px;color:#111827;font-weight:700;">NC Leg Tracker</h1><p style="margin:4px 0 0;font-size:13px;color:#6b7280;">${title}</p></div>
+<div style="text-align:right;"><div style="font-size:12px;color:#6b7280;">${now}</div><div style="font-size:12px;color:#9ca3af;margin-top:2px;">${bills.length} bills · ${healthCount} health-related · ${watchedCount} watched</div></div></div>
+<table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f8f9fb;">
+<th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e2e5eb;text-transform:uppercase;letter-spacing:0.05em;">Bill</th>
+<th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e2e5eb;text-transform:uppercase;letter-spacing:0.05em;">Title</th>
+<th style="padding:10px 12px;text-align:center;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e2e5eb;text-transform:uppercase;letter-spacing:0.05em;">Chamber</th>
+<th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e2e5eb;text-transform:uppercase;letter-spacing:0.05em;">Last Action</th>
+<th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:#6b7280;border-bottom:2px solid #e2e5eb;text-transform:uppercase;letter-spacing:0.05em;">Date</th>
+</tr></thead><tbody>${rows}</tbody></table>
+<div style="margin-top:24px;padding-top:12px;border-top:1px solid #eef0f4;font-size:10px;color:#9ca3af;">Generated from NC Leg Tracker · Data from ncleg.gov</div>
+<button class="no-print" onclick="window.print()" style="position:fixed;bottom:20px;right:20px;background:#059669;color:white;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(5,150,105,0.3);">🖨 Print / Save as PDF</button>
+</body></html>`;
 }
 
 export default function ExportButton({ bills, watchedIds, label }) {
@@ -124,89 +86,19 @@ export default function ExportButton({ bills, watchedIds, label }) {
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
-      <button
-        onClick={() => setOpen(!open)}
-        style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border-subtle)",
-          borderRadius: "6px",
-          padding: "8px 14px",
-          color: "var(--text-dim)",
-          fontSize: "12px",
-          fontWeight: 600,
-          cursor: "pointer",
-          transition: "all 0.15s ease",
-          fontFamily: "var(--font-sans)",
-          whiteSpace: "nowrap",
-        }}
-      >
+      <button onClick={() => setOpen(!open)} style={{ background: "var(--bg-card)", border: "1px solid var(--border-medium)", borderRadius: "var(--radius-sm)", padding: "8px 14px", color: "var(--text-muted)", fontSize: "12px", fontWeight: 600, cursor: "pointer", transition: "all 0.15s ease", fontFamily: "var(--font-sans)", whiteSpace: "nowrap", boxShadow: "var(--shadow-sm)" }}>
         ↓ Export
       </button>
-
       {open && (
         <>
-          {/* Backdrop to close menu */}
-          <div
-            onClick={() => setOpen(false)}
-            style={{ position: "fixed", inset: 0, zIndex: 99 }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "100%",
-              right: 0,
-              marginTop: "4px",
-              background: "#1a1f2e",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "8px",
-              padding: "4px",
-              zIndex: 100,
-              minWidth: "180px",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-            }}
-          >
-            <button
-              onClick={exportCSV}
-              style={{
-                display: "block",
-                width: "100%",
-                background: "none",
-                border: "none",
-                padding: "10px 14px",
-                color: "#cbd5e1",
-                fontSize: "13px",
-                fontWeight: 500,
-                cursor: "pointer",
-                textAlign: "left",
-                borderRadius: "6px",
-                fontFamily: "var(--font-sans)",
-                transition: "background 0.15s",
-              }}
-              onMouseEnter={(e) => (e.target.style.background = "rgba(255,255,255,0.06)")}
-              onMouseLeave={(e) => (e.target.style.background = "none")}
-            >
+          <div onClick={() => setOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 99 }} />
+          <div style={{ position: "absolute", top: "100%", right: 0, marginTop: "6px", background: "#ffffff", border: "1px solid var(--border-medium)", borderRadius: "var(--radius-md)", padding: "4px", zIndex: 100, minWidth: "190px", boxShadow: "var(--shadow-lg)" }}>
+            <button onClick={exportCSV} style={{ display: "block", width: "100%", background: "none", border: "none", padding: "10px 14px", color: "var(--text-secondary)", fontSize: "13px", fontWeight: 500, cursor: "pointer", textAlign: "left", borderRadius: "var(--radius-sm)", fontFamily: "var(--font-sans)" }}
+              onMouseEnter={(e) => (e.target.style.background = "var(--bg-card-hover)")} onMouseLeave={(e) => (e.target.style.background = "none")}>
               📊 Export as CSV (Excel)
             </button>
-            <button
-              onClick={exportPDF}
-              style={{
-                display: "block",
-                width: "100%",
-                background: "none",
-                border: "none",
-                padding: "10px 14px",
-                color: "#cbd5e1",
-                fontSize: "13px",
-                fontWeight: 500,
-                cursor: "pointer",
-                textAlign: "left",
-                borderRadius: "6px",
-                fontFamily: "var(--font-sans)",
-                transition: "background 0.15s",
-              }}
-              onMouseEnter={(e) => (e.target.style.background = "rgba(255,255,255,0.06)")}
-              onMouseLeave={(e) => (e.target.style.background = "none")}
-            >
+            <button onClick={exportPDF} style={{ display: "block", width: "100%", background: "none", border: "none", padding: "10px 14px", color: "var(--text-secondary)", fontSize: "13px", fontWeight: 500, cursor: "pointer", textAlign: "left", borderRadius: "var(--radius-sm)", fontFamily: "var(--font-sans)" }}
+              onMouseEnter={(e) => (e.target.style.background = "var(--bg-card-hover)")} onMouseLeave={(e) => (e.target.style.background = "none")}>
               📄 Export as PDF
             </button>
           </div>
